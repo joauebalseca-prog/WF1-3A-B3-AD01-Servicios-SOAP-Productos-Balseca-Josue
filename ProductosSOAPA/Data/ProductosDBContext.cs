@@ -10,33 +10,91 @@ namespace ProductosSOAPA.Data
         {
         }
 
+        // ============================================
+        // TABLAS
+        // ============================================
+
         public DbSet<Categoria> Categorias { get; set; }
 
         public DbSet<Producto> Productos { get; set; }
+
+        public DbSet<MovimientoInventario> MovimientosInventario { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Tabla Categorias
+
+            // ============================================
+            // TABLA CATEGORIAS
+            // ============================================
+
             modelBuilder.Entity<Categoria>()
                 .ToTable("Categorias");
 
-            // Tabla Productos
+
+            // ============================================
+            // TABLA PRODUCTOS
+            // ============================================
+
             modelBuilder.Entity<Producto>()
                 .ToTable("Productos");
 
-            // Relación Categoria 1 ---- N Productos
+
+            // ============================================
+            // TABLA MOVIMIENTO_INVENTARIO
+            // ============================================
+
+            modelBuilder.Entity<MovimientoInventario>()
+                .ToTable("Movimiento_Inventario");
+
+
+            // ============================================
+            // RELACIÓN:
+            // Categoria 1 ---- N Productos
+            // ============================================
+
             modelBuilder.Entity<Producto>()
                 .HasOne<Categoria>()
                 .WithMany()
                 .HasForeignKey(p => p.IdCategoria)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configuración del precio
+
+            // ============================================
+            // RELACIÓN:
+            // Producto 1 ---- N Movimiento_Inventario
+            // ============================================
+
+            modelBuilder.Entity<MovimientoInventario>()
+                .HasOne(m => m.Producto)
+                .WithMany()
+                .HasForeignKey(m => m.IdProducto)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // ============================================
+            // CONFIGURACIÓN DEL PRECIO
+            // ============================================
+
             modelBuilder.Entity<Producto>()
                 .Property(p => p.Precio)
                 .HasPrecision(10, 2);
+
+
+            // ============================================
+            // CONFIGURACIÓN MOVIMIENTO INVENTARIO
+            // ============================================
+
+            modelBuilder.Entity<MovimientoInventario>()
+                .Property(m => m.TipoMovimiento)
+                .HasMaxLength(20)
+                .IsRequired();
+
+            modelBuilder.Entity<MovimientoInventario>()
+                .Property(m => m.Observacion)
+                .HasMaxLength(250);
         }
     }
 }

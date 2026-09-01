@@ -21,6 +21,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+
 // ============================================
 // CONEXION A SQL SERVER
 // ============================================
@@ -30,10 +31,26 @@ builder.Services.AddDbContext<ProductosDBContext>(options =>
     )
 );
 
+
 // ============================================
-// REGISTRAR SERVICIO
+// SERVICIO SOAP DE PRODUCTOS
 // ============================================
 builder.Services.AddScoped<ProductoService>();
+
+
+// ============================================
+// SERVICIO REST DE MOVIMIENTO INVENTARIO
+// ============================================
+builder.Services.AddScoped<
+    IMovimientoInventarioService,
+    MovimientoInventarioService>();
+
+
+// ============================================
+// HABILITAR CONTROLADORES REST
+// ============================================
+builder.Services.AddControllers();
+
 
 // ============================================
 // CONFIGURACION COREWCF / SOAP
@@ -45,6 +62,7 @@ builder.Services
 builder.Services.AddSingleton<IServiceBehavior,
     UseRequestHeadersForMetadataAddressBehavior>();
 
+
 // ============================================
 // PERMITIR OPERACIONES SINCRONICAS
 // ============================================
@@ -53,12 +71,15 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AllowSynchronousIO = true;
 });
 
+
 var app = builder.Build();
+
 
 // ============================================
 // HABILITAR CORS
 // ============================================
 app.UseCors("AngularPolicy");
+
 
 // ============================================
 // ENDPOINT SOAP
@@ -73,13 +94,21 @@ app.UseServiceModel(serviceBuilder =>
         );
 });
 
+
 // ============================================
-// HABILITAR WSDL
+// HABILITAR WSDL DEL SERVICIO SOAP
 // ============================================
 var metadataBehavior =
     app.Services.GetRequiredService<ServiceMetadataBehavior>();
 
 metadataBehavior.HttpGetEnabled = true;
+
+
+// ============================================
+// HABILITAR ENDPOINTS REST
+// ============================================
+app.MapControllers();
+
 
 // ============================================
 // EJECUTAR APLICACION
