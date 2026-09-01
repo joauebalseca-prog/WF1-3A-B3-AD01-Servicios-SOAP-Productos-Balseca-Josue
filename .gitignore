@@ -32,3 +32,8 @@ packages/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Angular
+ProductosSOAPA-app/node_modules/
+ProductosSOAPA-app/dist/
+ProductosSOAPA-app/.angular/

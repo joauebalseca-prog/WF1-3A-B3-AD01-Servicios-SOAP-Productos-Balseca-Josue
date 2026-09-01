@@ -131,6 +131,26 @@ La base de datos ProductosSOAPDB contiene principalmente las tablas:
 
 La tabla Productos se relaciona con Categorias mediante IdCategoria.
 
+### 7. Ejecutar el cliente Angular
+
+Abrir una terminal dentro de:
+
+ProductosSOAPA-app
+
+Instalar las dependencias:
+
+npm install
+
+Ejecutar la aplicación:
+
+ng serve
+
+Abrir en el navegador la dirección mostrada por Angular, normalmente:
+
+http://localhost:4200
+
+El cliente Angular consume el servicio SOAP desarrollado en .NET.
+
 ## Autor
 
 Nombre: Josue Balseca

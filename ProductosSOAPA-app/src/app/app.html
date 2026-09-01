@@ -1,0 +1,574 @@
+<div class="contenedor">
+
+  <h1>Gestión de Productos SOAP</h1>
+
+
+  <!-- ========================================= -->
+  <!-- FORMULARIO REGISTRAR / EDITAR -->
+  <!-- ========================================= -->
+
+  <div class="formulario">
+
+    <h2>
+      {{ modoEdicion ? 'Editar producto' : 'Registrar producto' }}
+    </h2>
+
+    @if (modoEdicion) {
+
+      <p class="modo-edicion">
+
+        Editando producto ID:
+
+        <strong>
+          {{ productoNuevo.idProducto }}
+        </strong>
+
+      </p>
+
+    }
+
+
+    <!-- NOMBRE -->
+    <div class="campo">
+
+      <label>
+        Nombre
+      </label>
+
+      <input
+        type="text"
+        [(ngModel)]="productoNuevo.nombre"
+        placeholder="Nombre del producto">
+
+    </div>
+
+
+    <!-- DESCRIPCION -->
+    <div class="campo">
+
+      <label>
+        Descripción
+      </label>
+
+      <input
+        type="text"
+        [(ngModel)]="productoNuevo.descripcion"
+        placeholder="Descripción del producto">
+
+    </div>
+
+
+    <!-- PRECIO -->
+    <div class="campo">
+
+      <label>
+        Precio
+      </label>
+
+      <input
+        type="number"
+        [(ngModel)]="productoNuevo.precio"
+        min="0"
+        step="0.01">
+
+    </div>
+
+
+    <!-- STOCK -->
+    <div class="campo">
+
+      <label>
+        Stock
+      </label>
+
+      <input
+        type="number"
+        [(ngModel)]="productoNuevo.stock"
+        min="0">
+
+    </div>
+
+
+    <!-- CATEGORIA -->
+    <div class="campo">
+
+      <label>
+        Categoría
+      </label>
+
+      <select
+        [(ngModel)]="productoNuevo.idCategoria">
+
+        <option [ngValue]="0">
+          Seleccione una categoría
+        </option>
+
+        @for (
+          categoria of categorias();
+          track categoria.idCategoria
+        ) {
+
+          <option
+            [ngValue]="categoria.idCategoria">
+
+            {{ categoria.nombre }}
+
+          </option>
+
+        }
+
+      </select>
+
+    </div>
+
+
+    <!-- ESTADO -->
+    <div class="campo checkbox">
+
+      <label>
+
+        <input
+          type="checkbox"
+          [(ngModel)]="productoNuevo.estado">
+
+        Producto activo
+
+      </label>
+
+    </div>
+
+
+    <!-- BOTONES -->
+    <div class="botones">
+
+      <button
+        type="button"
+        class="btn-guardar"
+        (click)="guardarProducto()">
+
+        {{
+          modoEdicion
+            ? 'Actualizar producto'
+            : 'Guardar producto'
+        }}
+
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-limpiar"
+        (click)="limpiarFormulario()">
+
+        {{
+          modoEdicion
+            ? 'Cancelar edición'
+            : 'Limpiar'
+        }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================================= -->
+  <!-- BUSQUEDA POR ID -->
+  <!-- ========================================= -->
+
+  <div class="busqueda">
+
+    <h2>
+      Buscar producto por ID
+    </h2>
+
+    <div class="busqueda-contenido">
+
+      <div class="campo busqueda-campo">
+
+        <label>
+          ID del producto
+        </label>
+
+        <input
+          type="number"
+          [(ngModel)]="idBusqueda"
+          min="1"
+          placeholder="Ejemplo: 1">
+
+      </div>
+
+
+      <button
+        type="button"
+        class="btn-buscar"
+        (click)="buscarPorId()">
+
+        Buscar por ID
+
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-todos"
+        (click)="mostrarTodos()">
+
+        Mostrar todos
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================================= -->
+  <!-- FILTROS -->
+  <!-- ========================================= -->
+
+  <div class="filtros">
+
+    <h2>
+      Filtrar productos
+    </h2>
+
+
+    <div class="filtros-grid">
+
+
+      <!-- ===================================== -->
+      <!-- FILTRO POR PRECIO -->
+      <!-- ===================================== -->
+
+      <div class="filtro-card">
+
+        <h3>
+          Por precio
+        </h3>
+
+
+        <div class="campo">
+
+          <label>
+            Precio mínimo
+          </label>
+
+          <input
+            type="number"
+            [(ngModel)]="precioMinimo"
+            min="0"
+            step="0.01">
+
+        </div>
+
+
+        <div class="campo">
+
+          <label>
+            Precio máximo
+          </label>
+
+          <input
+            type="number"
+            [(ngModel)]="precioMaximo"
+            min="0"
+            step="0.01">
+
+        </div>
+
+
+        <button
+          type="button"
+          class="btn-filtrar"
+          (click)="filtrarPorPrecio()">
+
+          Filtrar por precio
+
+        </button>
+
+      </div>
+
+
+
+      <!-- ===================================== -->
+      <!-- FILTRO POR CATEGORIA -->
+      <!-- ===================================== -->
+
+      <div class="filtro-card">
+
+        <h3>
+          Por categoría
+        </h3>
+
+
+        <div class="campo">
+
+          <label>
+            Categoría
+          </label>
+
+          <select
+            [(ngModel)]="categoriaFiltro">
+
+            <option [ngValue]="0">
+              Seleccione una categoría
+            </option>
+
+            @for (
+              categoria of categorias();
+              track categoria.idCategoria
+            ) {
+
+              <option
+                [ngValue]="categoria.idCategoria">
+
+                {{ categoria.nombre }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="btn-filtrar"
+          (click)="filtrarPorCategoria()">
+
+          Filtrar por categoría
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn-todos"
+      (click)="mostrarTodos()">
+
+      Mostrar todos los productos
+
+    </button>
+
+  </div>
+
+
+
+  <!-- ========================================= -->
+  <!-- TABLA PRODUCTOS -->
+  <!-- ========================================= -->
+
+  <div class="lista">
+
+    <h2>
+      Productos registrados
+    </h2>
+
+    <p>
+
+      Productos mostrados:
+
+      <strong>
+        {{ productos().length }}
+      </strong>
+
+    </p>
+
+
+    <div class="tabla-contenedor">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              ID
+            </th>
+
+            <th>
+              Nombre
+            </th>
+
+            <th>
+              Descripción
+            </th>
+
+            <th>
+              Precio
+            </th>
+
+            <th>
+              Stock
+            </th>
+
+            <th>
+              Estado
+            </th>
+
+            <th>
+              Categoría
+            </th>
+
+            <th>
+              Acciones
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            producto of productos();
+            track producto.idProducto
+          ) {
+
+            <tr>
+
+
+              <!-- ID -->
+              <td>
+
+                {{ producto.idProducto }}
+
+              </td>
+
+
+              <!-- NOMBRE -->
+              <td>
+
+                {{ producto.nombre }}
+
+              </td>
+
+
+              <!-- DESCRIPCION -->
+              <td>
+
+                {{ producto.descripcion }}
+
+              </td>
+
+
+              <!-- PRECIO -->
+              <td>
+
+                ${{ producto.precio }}
+
+              </td>
+
+
+              <!-- STOCK -->
+              <td>
+
+                {{ producto.stock }}
+
+              </td>
+
+
+              <!-- ESTADO -->
+              <td>
+
+                @if (producto.estado) {
+
+                  <span class="activo">
+
+                    Activo
+
+                  </span>
+
+                } @else {
+
+                  <span class="inactivo">
+
+                    Inactivo
+
+                  </span>
+
+                }
+
+              </td>
+
+
+              <!-- CATEGORIA -->
+              <td>
+
+                {{
+                  obtenerNombreCategoria(
+                    producto.idCategoria
+                  )
+                }}
+
+              </td>
+
+
+              <!-- ACCIONES -->
+              <td class="acciones">
+
+
+                <button
+                  type="button"
+                  class="btn-editar"
+                  (click)="editarProducto(producto)">
+
+                  Editar
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="eliminarProducto(producto)">
+
+                  Eliminar
+
+                </button>
+
+
+              </td>
+
+            </tr>
+
+          }
+
+
+          @if (productos().length === 0) {
+
+            <tr>
+
+              <td
+                colspan="8"
+                class="sin-resultados">
+
+                No se encontraron productos.
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
