@@ -318,6 +318,135 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "ObtenerMovimientos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5139/api/MovimientoInventario",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5139",
+          "path": [
+            "api",
+            "MovimientoInventario"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AgregarMovimiento",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"idProducto\": 1,\r\n  \"tipoMovimiento\": \"Entrada\",\r\n  \"cantidad\": 10,\r\n  \"fechaMovimiento\": \"2026-09-01T16:50:00\",\r\n  \"observacion\": \"Ingreso inicial de inventario\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5139/api/MovimientoInventario",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5139",
+          "path": [
+            "api",
+            "MovimientoInventario"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ObtenerMovimientoPorId",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ActualizarMovimiento",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"idProducto\": 1,\r\n  \"tipoMovimiento\": \"Salida\",\r\n  \"cantidad\": 5,\r\n  \"fechaMovimiento\": \"2026-09-01T17:10:00\",\r\n  \"observacion\": \"Salida de inventario por venta\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5139/api/MovimientoInventario/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5139",
+          "path": [
+            "api",
+            "MovimientoInventario",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "EliminarMovimiento",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5139/api/MovimientoInventario/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5139",
+          "path": [
+            "api",
+            "MovimientoInventario",
+            "1"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
