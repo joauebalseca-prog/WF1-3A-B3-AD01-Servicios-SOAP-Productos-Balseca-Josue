@@ -1,10 +1,17 @@
 <div class="contenedor">
 
-  <h1>Gestión de Productos SOAP</h1>
+  <h1>Gestión de Productos SOAP + Inventario REST</h1>
+
+
+  <!-- ===================================================== -->
+  <!-- ===================================================== -->
+  <!--                  PRODUCTOS SOAP                       -->
+  <!-- ===================================================== -->
+  <!-- ===================================================== -->
 
 
   <!-- ========================================= -->
-  <!-- FORMULARIO REGISTRAR / EDITAR -->
+  <!-- FORMULARIO REGISTRAR / EDITAR PRODUCTO -->
   <!-- ========================================= -->
 
   <div class="formulario">
@@ -175,7 +182,7 @@
 
 
   <!-- ========================================= -->
-  <!-- BUSQUEDA POR ID -->
+  <!-- BUSQUEDA PRODUCTO POR ID -->
   <!-- ========================================= -->
 
   <div class="busqueda">
@@ -227,7 +234,7 @@
 
 
   <!-- ========================================= -->
-  <!-- FILTROS -->
+  <!-- FILTROS PRODUCTOS -->
   <!-- ========================================= -->
 
   <div class="filtros">
@@ -393,37 +400,21 @@
 
           <tr>
 
-            <th>
-              ID
-            </th>
+            <th>ID</th>
 
-            <th>
-              Nombre
-            </th>
+            <th>Nombre</th>
 
-            <th>
-              Descripción
-            </th>
+            <th>Descripción</th>
 
-            <th>
-              Precio
-            </th>
+            <th>Precio</th>
 
-            <th>
-              Stock
-            </th>
+            <th>Stock</th>
 
-            <th>
-              Estado
-            </th>
+            <th>Estado</th>
 
-            <th>
-              Categoría
-            </th>
+            <th>Categoría</th>
 
-            <th>
-              Acciones
-            </th>
+            <th>Acciones</th>
 
           </tr>
 
@@ -439,72 +430,44 @@
 
             <tr>
 
-
-              <!-- ID -->
               <td>
-
                 {{ producto.idProducto }}
-
               </td>
 
-
-              <!-- NOMBRE -->
               <td>
-
                 {{ producto.nombre }}
-
               </td>
 
-
-              <!-- DESCRIPCION -->
               <td>
-
                 {{ producto.descripcion }}
-
               </td>
 
-
-              <!-- PRECIO -->
               <td>
-
                 ${{ producto.precio }}
-
               </td>
 
-
-              <!-- STOCK -->
               <td>
-
                 {{ producto.stock }}
-
               </td>
 
-
-              <!-- ESTADO -->
               <td>
 
                 @if (producto.estado) {
 
                   <span class="activo">
-
                     Activo
-
                   </span>
 
                 } @else {
 
                   <span class="inactivo">
-
                     Inactivo
-
                   </span>
 
                 }
 
               </td>
 
-
-              <!-- CATEGORIA -->
               <td>
 
                 {{
@@ -515,10 +478,7 @@
 
               </td>
 
-
-              <!-- ACCIONES -->
               <td class="acciones">
-
 
                 <button
                   type="button"
@@ -539,7 +499,6 @@
 
                 </button>
 
-
               </td>
 
             </tr>
@@ -556,6 +515,453 @@
                 class="sin-resultados">
 
                 No se encontraron productos.
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ===================================================== -->
+  <!-- ===================================================== -->
+  <!--             MOVIMIENTOS DE INVENTARIO REST            -->
+  <!-- ===================================================== -->
+  <!-- ===================================================== -->
+
+
+  <hr>
+
+
+  <h1>
+    Movimientos de Inventario REST
+  </h1>
+
+
+  <!-- ========================================= -->
+  <!-- FORMULARIO MOVIMIENTO -->
+  <!-- ========================================= -->
+
+  <div class="formulario">
+
+    <h2>
+
+      {{
+        modoEdicionMovimiento
+          ? 'Editar movimiento'
+          : 'Registrar movimiento'
+      }}
+
+    </h2>
+
+
+    @if (modoEdicionMovimiento) {
+
+      <p class="modo-edicion">
+
+        Editando movimiento ID:
+
+        <strong>
+          {{ movimientoNuevo.idMovimiento }}
+        </strong>
+
+      </p>
+
+    }
+
+
+    <!-- PRODUCTO -->
+    <div class="campo">
+
+      <label>
+        Producto
+      </label>
+
+      <select
+        [(ngModel)]="movimientoNuevo.idProducto">
+
+        <option [ngValue]="0">
+          Seleccione un producto
+        </option>
+
+        @for (
+          producto of productos();
+          track producto.idProducto
+        ) {
+
+          <option
+            [ngValue]="producto.idProducto">
+
+            {{ producto.nombre }}
+
+          </option>
+
+        }
+
+      </select>
+
+    </div>
+
+
+    <!-- TIPO MOVIMIENTO -->
+    <div class="campo">
+
+      <label>
+        Tipo de movimiento
+      </label>
+
+      <select
+        [(ngModel)]="movimientoNuevo.tipoMovimiento">
+
+        <option value="Entrada">
+          Entrada
+        </option>
+
+        <option value="Salida">
+          Salida
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- CANTIDAD -->
+    <div class="campo">
+
+      <label>
+        Cantidad
+      </label>
+
+      <input
+        type="number"
+        [(ngModel)]="movimientoNuevo.cantidad"
+        min="1"
+        placeholder="Cantidad">
+
+    </div>
+
+
+    <!-- FECHA -->
+    <div class="campo">
+
+      <label>
+        Fecha y hora
+      </label>
+
+      <input
+        type="datetime-local"
+        [(ngModel)]="movimientoNuevo.fechaMovimiento">
+
+    </div>
+
+
+    <!-- OBSERVACION -->
+    <div class="campo">
+
+      <label>
+        Observación
+      </label>
+
+      <input
+        type="text"
+        [(ngModel)]="movimientoNuevo.observacion"
+        placeholder="Observación del movimiento">
+
+    </div>
+
+
+    <!-- BOTONES -->
+    <div class="botones">
+
+      <button
+        type="button"
+        class="btn-guardar"
+        (click)="guardarMovimiento()">
+
+        {{
+          modoEdicionMovimiento
+            ? 'Actualizar movimiento'
+            : 'Guardar movimiento'
+        }}
+
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-limpiar"
+        (click)="limpiarFormularioMovimiento()">
+
+        {{
+          modoEdicionMovimiento
+            ? 'Cancelar edición'
+            : 'Limpiar'
+        }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================================= -->
+  <!-- BUSQUEDA MOVIMIENTO POR ID -->
+  <!-- ========================================= -->
+
+  <div class="busqueda">
+
+    <h2>
+      Buscar movimiento por ID
+    </h2>
+
+
+    <div class="busqueda-contenido">
+
+      <div class="campo busqueda-campo">
+
+        <label>
+          ID del movimiento
+        </label>
+
+        <input
+          type="number"
+          [(ngModel)]="idMovimientoBusqueda"
+          min="1"
+          placeholder="Ejemplo: 1">
+
+      </div>
+
+
+      <button
+        type="button"
+        class="btn-buscar"
+        (click)="buscarMovimientoPorId()">
+
+        Buscar por ID
+
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-todos"
+        (click)="mostrarTodosMovimientos()">
+
+        Mostrar todos
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================================= -->
+  <!-- TABLA MOVIMIENTOS -->
+  <!-- ========================================= -->
+
+  <div class="lista">
+
+    <h2>
+      Movimientos registrados
+    </h2>
+
+
+    <p>
+
+      Movimientos mostrados:
+
+      <strong>
+        {{ movimientos().length }}
+      </strong>
+
+    </p>
+
+
+    <div class="tabla-contenedor">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              ID
+            </th>
+
+            <th>
+              Producto
+            </th>
+
+            <th>
+              Tipo
+            </th>
+
+            <th>
+              Cantidad
+            </th>
+
+            <th>
+              Fecha
+            </th>
+
+            <th>
+              Observación
+            </th>
+
+            <th>
+              Acciones
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            movimiento of movimientos();
+            track movimiento.idMovimiento
+          ) {
+
+            <tr>
+
+
+              <!-- ID -->
+              <td>
+
+                {{ movimiento.idMovimiento }}
+
+              </td>
+
+
+              <!-- PRODUCTO -->
+              <td>
+
+                @if (movimiento.producto) {
+
+                  {{ movimiento.producto.nombre }}
+
+                } @else {
+
+                  {{
+                    obtenerNombreProducto(
+                      movimiento.idProducto
+                    )
+                  }}
+
+                }
+
+              </td>
+
+
+              <!-- TIPO -->
+              <td>
+
+                @if (
+                  movimiento.tipoMovimiento === 'Entrada'
+                ) {
+
+                  <span class="activo">
+
+                    Entrada
+
+                  </span>
+
+                } @else {
+
+                  <span class="inactivo">
+
+                    Salida
+
+                  </span>
+
+                }
+
+              </td>
+
+
+              <!-- CANTIDAD -->
+              <td>
+
+                {{ movimiento.cantidad }}
+
+              </td>
+
+
+              <!-- FECHA -->
+              <td>
+
+                {{ movimiento.fechaMovimiento }}
+
+              </td>
+
+
+              <!-- OBSERVACION -->
+              <td>
+
+                {{
+                  movimiento.observacion
+                    || 'Sin observación'
+                }}
+
+              </td>
+
+
+              <!-- ACCIONES -->
+              <td class="acciones">
+
+                <button
+                  type="button"
+                  class="btn-editar"
+                  (click)="editarMovimiento(movimiento)">
+
+                  Editar
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="eliminarMovimiento(movimiento)">
+
+                  Eliminar
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          }
+
+
+          @if (movimientos().length === 0) {
+
+            <tr>
+
+              <td
+                colspan="7"
+                class="sin-resultados">
+
+                No se encontraron movimientos
+                de inventario.
 
               </td>
 
